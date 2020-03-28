@@ -1,6 +1,7 @@
 # ArtnetnodeWifi
 
 This is a version for Arduino ESP8266 modules. It is adapted to use the ESP8266 Wifi instead of ethernet.
+Besides the ESP8266, it can also run on ESP32, WiFi101 (e.g. MKR1000) or WiFiNINA (e.g. NANO 33 IoT) devices.
 
 ## Installation
 
@@ -35,9 +36,13 @@ Send out DMX messages on the serial port at 250k
 
 Send out the debug-text on the serial port at 115.2k
 
+### Transmit
+
+Transmit a universe into the network.
+
 ## Copyright
-Stephan Ruloff, 2016
-https://github.com/rstephan
+Stephan Ruloff, 2016-2020
+https://github.com/rstephan/ArtnetnodeWifi
 
 # Art-Net
 
@@ -55,13 +60,13 @@ An artnet and DMX processing and handling library for the Tiva C Launchpad thoug
 ### Requirements
 Requires a build of the latest energia from git for changes to the ethernet library
 
-http://github.com/energia/Energia
+https://github.com/energia/Energia
 
 ### Copyright
 Charles Yarnold 2015 - charlesyarnold@gmail.com
 
 ### Acknowledgments
-* DMX sending based on - http://playground.arduino.cc/Learning/DMXSerial
+* DMX sending based on - https://playground.arduino.cc/Learning/DMXSerial
 * Artnet handling inspired by - https://github.com/natcl/Artnet
 * https://github.com/solexious/Artnetnode
 * https://github.com/solexious/ESP8266_artnet_led_node

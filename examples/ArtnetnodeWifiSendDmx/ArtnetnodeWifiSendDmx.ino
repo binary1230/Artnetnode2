@@ -2,12 +2,10 @@
 Example Send DMX, transmit all received ArtNet messages out of the serial port.
 
 @author Stephan Ruloff
-@date 2016-2017
+@date 2016-2019
 https://github.com/rstephan
 
 */
-#include <ESP8266WiFi.h>
-#include <WiFiUdp.h>
 #include <ArtnetnodeWifi.h>
 
 //Wifi settings
@@ -56,11 +54,11 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* d
 {
   // Send "break" as a "slow" zero.
   Serial.begin(56700);
-  Serial.write(0);
+  Serial.write((uint8_t)0);
   delayMicroseconds(220);
   Serial.begin(250000, SERIAL_8N2);
   
-  Serial.write(0); // Start-Byte
+  Serial.write((uint8_t)0); // Start-Byte
   // send out the buffer
   for (int i = 0; i < length; i++)
   {

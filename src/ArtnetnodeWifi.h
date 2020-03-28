@@ -22,7 +22,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
+#if defined(ARDUINO_ARCH_ESP32) || defined(ESP32)
+#include <WiFi.h>
+#elif defined(ARDUINO_ARCH_ESP8266)
 #include <ESP8266WiFi.h>
+#elif defined(ARDUINO_ARCH_SAMD)
+#if defined(ARDUINO_SAMD_MKR1000)
+#include <WiFi101.h>
+#else
+#include <WiFiNINA.h>
+#endif
+#else
+#error "Architecture not supported!"
+#endif
 #include <WiFiUdp.h>
 #include "OpCodes.h"
 #include "NodeReportCodes.h"
@@ -37,7 +49,7 @@ class ArtnetnodeWifi
 public:
   ArtnetnodeWifi();
 
-  uint8_t begin(void);
+  uint8_t begin(String hostname = "");
   uint16_t read();
 
   // Node identity
@@ -47,6 +59,31 @@ public:
   void setNumPorts(uint8_t num);
 
   void setStartingUniverse(uint16_t startingUniverse);
+
+  // Transmit
+  int write(void);
+  int write(IPAddress ip);
+  void setByte(uint16_t pos, uint8_t value);
+
+  inline void setUniverse(uint16_t universe)
+  {
+    outgoingUniverse = universe;
+  }
+
+  inline void setPhysical(uint8_t port)
+  {
+    physical = port;
+  }
+
+  inline void setLength(uint16_t len)
+  {
+    dmxDataLength = len;
+  }
+
+  inline void setPortType(uint8_t port, uint8_t type)
+  {
+    PollReplyPacket.setPortType(port, type);
+  }
 
   // DMX controls
   void enableDMX();
@@ -73,6 +110,7 @@ public:
 private:
   WiFiUDP Udp;
   PollReply PollReplyPacket;
+  String host;
 
   // Packet handlers
   uint16_t handleDMX(uint8_t nzs);
@@ -82,12 +120,17 @@ private:
   uint8_t artnetPacket[ARTNET_MAX_BUFFER];
   uint16_t packetSize;
   uint16_t opcode;
+  uint8_t sequence;
+  uint8_t physical;
+  uint16_t outgoingUniverse;
+  uint16_t dmxDataLength;
   IPAddress localIP;
   IPAddress localMask;
   IPAddress localBroadcast;
 
   // Packet functions
   bool isBroadcast();
+  uint16_t makePacket(void);
 
   // DMX settings
   bool DMXOutputStatus;
