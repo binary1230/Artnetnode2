@@ -99,6 +99,7 @@ public:
   }
 
   // DMX controls
+  #if defined(ARTNET_DMX_OUTPUT)
   void enableDMX();
   void disableDMX();
   void enableDMXOutput(uint8_t outputID);
@@ -108,6 +109,7 @@ public:
 
   // DMX tick
   void tickDMX(uint32_t time);
+  #endif // #if defined(ARTNET_DMX_OUTPUT)
   
   // Return a pointer to the start of the DMX data
   inline uint8_t* getDmxFrame(void)
@@ -151,17 +153,20 @@ private:
   bool isBroadcast();
   uint16_t makePacket(void);
 
+  uint16_t startingUniverse;
+
   // DMX settings
+  #if defined(ARTNET_DMX_OUTPUT)
   bool DMXOutputStatus;
   uint16_t DMXOutputs[DMX_MAX_OUTPUTS][3];
   uint8_t DMXBuffer[DMX_MAX_OUTPUTS][DMX_MAX_BUFFER];
 
-  uint16_t startingUniverse;
-
   // DMX tick
   void sendDMX();
-  uint8_t* getDmxFrame(uint8_t outputID);
   uint8_t msSinceDMXSend;
+  #endif // #if defined(ARTNET_DMX_OUTPUT)
+
+  uint8_t* getDmxFrame(uint8_t outputID);
 
   void (*artDmxCallback)(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* data);
   static const char artnetId[];

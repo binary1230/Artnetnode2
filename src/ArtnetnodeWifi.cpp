@@ -27,19 +27,21 @@ const char ArtnetnodeWifi::artnetId[] = ARTNET_ID;
 ArtnetnodeWifi::ArtnetnodeWifi()
 {
   // Initalise DMXOutput array
+  #if defined(ARTNET_DMX_OUTPUT)
   for (int i = 0; i < DMX_MAX_OUTPUTS; i++) {
     DMXOutputs[i][0] = 0xFF;
     DMXOutputs[i][1] = 0xFF;
     DMXOutputs[i][2] = 0;
   }
 
-  // Start DMX tick clock
-  msSinceDMXSend = 0;
-
   // Init DMX buffers
   for (int i = 0; i < DMX_MAX_OUTPUTS; i++) {
     memset(DMXBuffer[i], 0, sizeof(DMXBuffer[i]));
   }
+
+  // Start DMX tick clock
+  msSinceDMXSend = 0;
+  #endif // #if defined(ARTNET_DMX_OUTPUT)
 
   sequence = 1;
   physical = 0;
@@ -229,6 +231,7 @@ uint16_t ArtnetnodeWifi::handleDMX(uint8_t nzs)
       (*artDmxCallback)(universe, dmxDataLength, sequence, artnetPacket + ARTNET_DMX_START_LOC);
     }
 
+    #if defined(ARTNET_DMX_OUTPUT)
     for(int a = 0; a < DMX_MAX_OUTPUTS; a++){
       if(DMXOutputs[a][1] == universe){
         for (int i = 0 ; i < DMX_MAX_BUFFER ; i++){
@@ -241,6 +244,7 @@ uint16_t ArtnetnodeWifi::handleDMX(uint8_t nzs)
         }
       }
     }
+    #endif // #if defined(ARTNET_DMX_OUTPUT)
 
     if (nzs) {
       return OpNzs;
@@ -263,6 +267,7 @@ uint16_t ArtnetnodeWifi::handlePollRequest()
   }
 }
 
+#if defined(ARTNET_DMX_OUTPUT)
 void ArtnetnodeWifi::enableDMX()
 {
   DMXOutputStatus = true;
@@ -327,3 +332,4 @@ void ArtnetnodeWifi::tickDMX(uint32_t time)
     msSinceDMXSend = 0;
   }
 }
+#endif // #if defined(ARTNET_DMX_OUTPUT)
