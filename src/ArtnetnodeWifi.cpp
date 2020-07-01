@@ -47,6 +47,20 @@ ArtnetnodeWifi::ArtnetnodeWifi()
   dmxDataLength = 0;
 }
 
+#if defined(ARTNET_NODE_USE_WIFI) 
+  #define ART_NETWORK WiFi
+  static void getMacAddress(uint8_t *mac_address)
+  {
+    Wifi.macAddress(mac_address);
+  }
+#elif defined(ARTNET_NODE_USE_ETHERNET)
+  #define ART_NETWORK Ethernet
+  static void getMacAddress(uint8_t *mac_address)
+  {
+    EthernetClass::MACAddress(mac_address);
+  }
+#endif
+
 /**
 @retval 0 Ok
 */
@@ -55,11 +69,11 @@ uint8_t ArtnetnodeWifi::begin(String hostname)
   byte mac[6];
 
   Udp.begin(ARTNET_PORT);
-  localIP = WiFi.localIP();
-  localMask = WiFi.subnetMask();
+  localIP = ART_NETWORK.localIP();
+  localMask = ART_NETWORK.subnetMask();
   localBroadcast = IPAddress((uint32_t)localIP | ~(uint32_t)localMask);
 
-  WiFi.macAddress(mac);
+  getMacAddress(mac);
   PollReplyPacket.setMac(mac);
   PollReplyPacket.setIP(localIP);
   PollReplyPacket.canDHCP(true);

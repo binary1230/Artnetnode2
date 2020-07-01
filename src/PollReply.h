@@ -21,7 +21,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Class for saving details to and for constructing pollreply packets
 
 #include <Arduino.h>
-#include <WiFiUdp.h>
+
+
+#if defined(ARTNET_NODE_USE_WIFI)
+  #include <WiFiUdp.h>
+#elif defined(ARTNET_NODE_USE_ETHERNET)
+  #include <EthernetUdp.h>
+#else
+  #error "Invalid configuration (must define either ARTNET_NODE_USE_ETHERNET or ARTNET_NODE_USE_WIFI)"
+#endif 
+
+
+
+
 #include "OpCodes.h"
 #include "NodeReportCodes.h"
 #include "StyleCodes.h"

@@ -22,20 +22,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <Arduino.h>
-#if defined(ARDUINO_ARCH_ESP32) || defined(ESP32)
-#include <WiFi.h>
-#elif defined(ARDUINO_ARCH_ESP8266)
-#include <ESP8266WiFi.h>
-#elif defined(ARDUINO_ARCH_SAMD)
-#if defined(ARDUINO_SAMD_MKR1000)
-#include <WiFi101.h>
+
+#if defined(ARTNET_NODE_USE_WIFI) && defined(ARTNET_NODE_USE_ETHERNET)
+  #error "Invalid configuration (must define only ONE of ARTNET_NODE_USE_WIFI or ARTNET_NODE_USE_ETHERNET)"
+#elif defined(ARTNET_NODE_USE_WIFI)
+  
+  #if defined(ARDUINO_ARCH_ESP32) || defined(ESP32)
+    #include <WiFi.h>
+  #elif defined(ARDUINO_ARCH_ESP8266)
+    #include <ESP8266WiFi.h>
+  #elif defined(ARDUINO_ARCH_SAMD)
+    #if defined(ARDUINO_SAMD_MKR1000)
+      #include <WiFi101.h>
+    #else
+      #include <WiFiNINA.h>
+    #endif
+  #else
+    #error "Architecture not supported!"
+  #endif
+
+  #include <WiFiUdp.h>
+
+#elif defined(ARTNET_NODE_USE_ETHERNET)
+  #include <Ethernet.h>
 #else
-#include <WiFiNINA.h>
-#endif
-#else
-#error "Architecture not supported!"
-#endif
-#include <WiFiUdp.h>
+  #error "Invalid configuration (must define either ARTNET_NODE_USE_ETHERNET or ARTNET_NODE_USE_WIFI)"
+#endif 
+
 #include "OpCodes.h"
 #include "NodeReportCodes.h"
 #include "StyleCodes.h"
@@ -108,7 +121,13 @@ public:
   }
 
 private:
-  WiFiUDP Udp;
+  #if defined(ARTNET_NODE_USE_WIFI) 
+    WiFiUDP Udp;
+  #elif defined(ARTNET_NODE_USE_ETHERNET)
+    EthernetUDP Udp;
+  #endif
+
+  
   PollReply PollReplyPacket;
   String host;
 
