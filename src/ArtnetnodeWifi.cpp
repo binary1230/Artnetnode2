@@ -50,17 +50,21 @@ ArtnetnodeWifi::ArtnetnodeWifi()
 }
 
 #if defined(ARTNET_NODE_USE_WIFI) 
-  #define ART_NETWORK WiFi
-  static void getMacAddress(uint8_t *mac_address)
-  {
-    Wifi.macAddress(mac_address);
-  }
+
+#define ART_NETWORK WiFi
+static void getMacAddress(uint8_t *mac_address)
+{
+  WiFi.macAddress(mac_address);
+}
+
 #elif defined(ARTNET_NODE_USE_ETHERNET)
-  #define ART_NETWORK Ethernet
-  static void getMacAddress(uint8_t *mac_address)
-  {
-    EthernetClass::MACAddress(mac_address);
-  }
+
+#define ART_NETWORK Ethernet
+static void getMacAddress(uint8_t *mac_address)
+{
+  EthernetClass::MACAddress(mac_address);
+}
+
 #endif
 
 /**
