@@ -1,6 +1,10 @@
-# ArtnetnodeWifi
+# Artnetnode2
 
-This is a version for Arduino ESP8266 modules. It is adapted to use the ESP8266 Wifi instead of ethernet.
+Modified Artnet library that can read from EITHER Ethernet or Wifi.
+
+Just define ARTNET_NODE_USE_ETHERNET or ARTNET_NODE_USE_WIFI before including this library.
+
+Based on ArtnetnodeWifi, which is a version for Arduino ESP8266 modules. It is adapted to use the ESP8266 Wifi instead of ethernet.
 Besides the ESP8266, it can also run on ESP32, WiFi101 (e.g. MKR1000) or WiFiNINA (e.g. NANO 33 IoT) devices.
 
 ## Installation
